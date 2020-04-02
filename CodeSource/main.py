@@ -3,6 +3,8 @@ import numpy as np
 
 pygame.init()
 displaySize = 500
+IMAGE = pygame.image.load('coronavirus.png')
+IMAGE = pygame.transform.scale(IMAGE, (50, 50))
 win = pygame.display.set_mode((displaySize, displaySize))
 pygame.display.set_caption("RunITA")
 x = 200
@@ -16,7 +18,7 @@ jumpCount = 5
 run = True
 
 while run:
-    pygame.time.delay(50)
+    pygame.time.delay(25)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -50,7 +52,7 @@ while run:
             isJump = False
 
     win.fill((0, 0, 0))
-    pygame.draw.rect(win, (255, 0, 0), (x, y, width, height))
+    win.blit(IMAGE, (x,y))
     pygame.display.update()
 
 pygame.quit()
