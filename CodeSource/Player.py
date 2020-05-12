@@ -1,6 +1,7 @@
-from Cenario import*
+from CodeSource.Cenario import *
 
 BLACK = (0, 0, 0, 255)
+
 
 class Player(Screen):
     def __init__(self, img_path):
@@ -28,6 +29,8 @@ class Player(Screen):
                 self.player_y_change = self.move
             elif pressed_key == 'r':
                 self.move += 0.1
+            elif pressed_key == 'l':
+                print(self.abs_x, self.abs_y)
 
         if type == pygame.KEYUP:
             if pressed_key == 'left' or pressed_key == 'right':
@@ -35,19 +38,24 @@ class Player(Screen):
             elif pressed_key == 'up' or pressed_key == 'down':
                 self.player_y_change = 0
 
-    def checkNextMove(self):
+    def check_next_move(self):
         if Cenario.get_color(self.abs_x + self.player_x_change, self.abs_y + self.player_y_change) == BLACK:
-            if Cenario.get_color(self.abs_x + self.player_x_change + self.player_size_x, self.abs_y + self.player_y_change + self.player_size_y) == BLACK:
-                if Cenario.get_color(self.abs_x + self.player_x_change + self.player_size_x, self.abs_y + self.player_y_change) == BLACK:
+            if Cenario.get_color(self.abs_x + self.player_x_change + self.player_size_x,
+                                 self.abs_y + self.player_y_change + self.player_size_y) == BLACK:
+                if Cenario.get_color(self.abs_x + self.player_x_change + self.player_size_x,
+                                     self.abs_y + self.player_y_change) == BLACK:
                     if Cenario.get_color(self.abs_x + self.player_x_change,
-                            self.abs_y + self.player_y_change + self.player_size_y) == BLACK:
+                                         self.abs_y + self.player_y_change + self.player_size_y) == BLACK:
                         return True
-                else: return False
-            else: return False
-        else: return False
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False
 
     def update_positions(self):
-        if self.checkNextMove():
+        if self.check_next_move():
             self.abs_x += self.player_x_change
             self.abs_y += self.player_y_change
 
@@ -62,7 +70,7 @@ class Player(Screen):
                 self.abs_y = 0
 
             if self.abs_x < self.start_scroll_x:
-               self.x = self.abs_x
+                self.x = self.abs_x
             elif self.abs_x > Cenario.size_x - self.start_scroll_x:
                 self.x = self.abs_x - Cenario.size_x + self.screen_x
             else:
@@ -79,3 +87,7 @@ class Player(Screen):
 
     def print_player(self):
         self.screen.blit(self.player_img, (self.x, self.y))
+
+    def get_rect(self):
+        rect = self.player_img.get_rect()
+        return rect.move(self.abs_x, self.abs_y)

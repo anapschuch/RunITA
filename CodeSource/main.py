@@ -1,5 +1,6 @@
-from Player import*
-from Cenario import*
+from CodeSource.Player import*
+from CodeSource.Cenario import*
+from CodeSource.Bullets import*
 import pygame
 import os
 
@@ -8,6 +9,7 @@ pygame.init()
 CLOCK = pygame.time.Clock()
 
 cenario = Cenario(1)
+bullets = Bullets(1)
 player = Player('img/player4.png')
 
 #Title and Icon
@@ -32,6 +34,8 @@ while running:
 
     player.update_positions()
     cenario.print_cenario()
+    bullets.check_collision(player.get_rect())
+    bullets.draw_bullets()
     player.print_player()
     pygame.display.update()
     CLOCK.tick(FPS)

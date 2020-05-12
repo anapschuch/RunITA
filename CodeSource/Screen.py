@@ -1,7 +1,7 @@
 import pygame
 
-class Screen(object):
 
+class Screen(object):
     """Classe que seta os parâmetros principais da tela de jogo"""
 
     def __init__(self):
