@@ -91,3 +91,9 @@ class Player(Screen):
     def get_rect(self):
         rect = self.player_img.get_rect()
         return rect.move(self.abs_x, self.abs_y)
+
+    def increase_velocity(self):
+        self.move += 1
+
+    def set_normal_velocity(self):
+        self.move = 1

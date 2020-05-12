@@ -20,6 +20,8 @@ pygame.display.set_icon(icon)
 #Some game parameters
 FPS = 200
 
+collision_time = -10
+
 #Game loop
 running = True
 while running:
@@ -34,8 +36,16 @@ while running:
 
     player.update_positions()
     cenario.print_cenario()
-    bullets.check_collision(player.get_rect())
+
+    if bullets.check_collision(player.get_rect()):
+        collision_time = pygame.time.get_ticks()/1000
+        player.increase_velocity()
+    else:
+        if pygame.time.get_ticks()/1000 - collision_time > 7:
+            player.set_normal_velocity()
+
     bullets.draw_bullets()
+
     player.print_player()
     pygame.display.update()
     CLOCK.tick(FPS)

@@ -22,4 +22,5 @@ class Bullets(Cenario):
             if self.bullets[i].get_rect().colliderect(player_rect):
                 self.bullets.remove(self.bullets[i])
                 self.draw_bullets()
-                break
+                return True
+        return False
