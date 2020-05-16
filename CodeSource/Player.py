@@ -13,6 +13,7 @@ class Player(Screen):
         self.player_x_change = 0
         self.player_y_change = 0
         self.player_img = pygame.image.load(img_path)
+        self.player_img = pygame.transform.scale(self.player_img, (20, 20))
         self.player_size_x, self.player_size_y = self.player_img.convert().get_rect().size
         self.move = 1
         self.print_player()

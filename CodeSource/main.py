@@ -10,11 +10,12 @@ CLOCK = pygame.time.Clock()
 
 cenario = Cenario(1)
 bullets = Bullets(1)
-player = Player('img/player4.png')
+player_img = 'img/coronavirus.png'
+player = Player(player_img)
 
 #Title and Icon
 pygame.display.set_caption("RunITA")
-icon = pygame.image.load('img/logo.png')
+icon = pygame.image.load('img/coronavirus.png')
 pygame.display.set_icon(icon)
 
 #Some game parameters
