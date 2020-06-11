@@ -125,6 +125,7 @@ def game():
         if bullets.check_collision(player.get_rect()):
             collision_time = pygame.time.get_ticks() / 1000
             player.increase_velocity()
+            player.increase_points()
         else:
             if pygame.time.get_ticks() / 1000 - collision_time > 7:
                 player.set_normal_velocity()
@@ -145,10 +146,14 @@ def game():
         pygame.draw.rect(screen.screen, BLACK, [0, 0, screen.screen_x, 25], 0)
         pygame.font.init()  # you have to call this at the start,
         fonte = pygame.font.SysFont('comicsansms', 20)
-        texto = fonte.render('Colocar informações do jogo aqui?', False, (255, 255, 255))
+        texto = fonte.render('vidas -', False, (255, 255, 255))
+        texto2 = fonte.render('pontuação -', False, (255, 255, 255))
         vidas = fonte.render(str(player.get_lives()), False, (255, 255, 255))
-        screen.screen.blit(vidas, (350, 5))
+        pontos = fonte.render(str(player.get_points()), False, (255, 255, 255))
+        screen.screen.blit(vidas, (120, 0))
+        screen.screen.blit(texto2, (150, 0))
         screen.screen.blit(texto, (50, 0))
+        screen.screen.blit(pontos, (265, 0))
 
         pygame.display.update()
         CLOCK.tick(FPS)

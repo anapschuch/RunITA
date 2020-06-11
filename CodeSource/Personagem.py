@@ -17,6 +17,7 @@ class Personagem(Screen):
         self.size_x, self.size_y = self.img.convert().get_rect().size
         self.move = 1
         self.lives = 3
+        self.points = 0
 
     def check_next_move(self):
         if Cenario.get_color(self.abs_x + self.x_change, self.abs_y + self.y_change) == BLACK:
@@ -47,5 +48,11 @@ class Personagem(Screen):
     def decrease_lives(self):
         self.lives -= 1
 
+    def increase_points(self):
+        self.points += 1
+
     def get_lives(self):
         return self.lives
+
+    def get_points(self):
+        return self.points
