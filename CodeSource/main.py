@@ -4,6 +4,7 @@ from CodeSource.InimigoAleatorio import*
 from CodeSource.EndPhase import*
 import pygame
 import os
+import sys
 
 pygame.init()
 mainClock = pygame.time.Clock()
@@ -148,15 +149,22 @@ def game():
         fonte = pygame.font.SysFont('comicsansms', 20)
         texto = fonte.render('vidas -', False, (255, 255, 255))
         texto2 = fonte.render('pontuação -', False, (255, 255, 255))
+        motivacional = fonte.render('Você é bom!', False, (255, 255, 255))
         vidas = fonte.render(str(player.get_lives()), False, (255, 255, 255))
         pontos = fonte.render(str(player.get_points()), False, (255, 255, 255))
         screen.screen.blit(vidas, (120, 0))
         screen.screen.blit(texto2, (150, 0))
         screen.screen.blit(texto, (50, 0))
         screen.screen.blit(pontos, (265, 0))
+        if player.get_points() >= 5:
+            screen.screen.blit(motivacional, (305, 0))
 
         pygame.display.update()
         CLOCK.tick(FPS)
+
+        if player.get_lives() == -1:
+            running = False
+            gameover()
 
 
 def options():
@@ -181,6 +189,29 @@ def options():
 
         pygame.display.update()
         mainClock.tick(60)
+
+
+def gameover():
+    running = True
+    while running:
+
+        screen.fill([0, 0, 0])
+        draw_text('Você Morreu!', font, (0, 255, 0), screen, 20, 20)
+        draw_text('Não desista! Clique em R para recomeçar', font, (0, 255, 0), screen, 40, 80)
+        draw_text('Clique em esc para desistir :(', font, (0, 255, 0), screen, 40, 140)
+
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit(0)
+            if event.type == KEYDOWN:
+                if event.key == K_r:
+                    running = False
+
+        pygame.display.update()
+        mainClock.tick(60)
+    game()
 
 
 main_menu()

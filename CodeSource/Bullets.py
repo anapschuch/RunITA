@@ -5,7 +5,6 @@ class Bullets(Cenario):
     bullets_positions = [(310, 380), (30, 845), (890, 585), (680, 265), (325, 205), (660, 815), (945, 30)]
     bullets = []
 
-
     def __init__(self, phase):
         super().__init__(phase)
         self.def_bullets()
