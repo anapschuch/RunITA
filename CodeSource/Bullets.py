@@ -8,7 +8,7 @@ class Bullets(Cenario):
     def __init__(self, phase):
         super().__init__(phase)
         self.def_bullets()
-        self.last_collision = 0
+
 
     def def_bullets(self):
         for i in range(len(self.bullets_positions)):
