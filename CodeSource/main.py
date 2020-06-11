@@ -148,7 +148,7 @@ def game():
         texto = fonte.render('Colocar informações do jogo aqui?', False, (255, 255, 255))
         vidas = fonte.render(str(player.get_lives()), False, (255, 255, 255))
         screen.screen.blit(vidas, (350, 5))
-        screen.screen.blit(texto, (50, 5))
+        screen.screen.blit(texto, (50, 0))
 
         pygame.display.update()
         CLOCK.tick(FPS)
