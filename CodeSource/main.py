@@ -95,6 +95,11 @@ def game():
 
     enemy_list = []
     enemy_list.append(InimigoAleatorio(enemy_img, 95, 140))
+    enemy_list.append(InimigoAleatorio(enemy_img, 332, 196))
+    enemy_list.append(InimigoAleatorio(enemy_img, 500, 190))
+    enemy_list.append(InimigoAleatorio(enemy_img, 770, 350))
+    enemy_list.append(InimigoAleatorio(enemy_img, 1000, 160))
+    enemy_list.append(InimigoAleatorio(enemy_img, 1000, 520))
     enemy_list.append(InimigoAleatorio(enemy_img, 100, 845))
     enemy_list.append(InimigoAleatorio(enemy_img, 515, 655))
 
@@ -180,7 +185,7 @@ def options():
         draw_text('Controles e elementos do jogo:', font, (0, 255, 0), screen, 20, 20)
         draw_text('Setas do teclado - movimentação', font, (0, 255, 0), screen, 40, 80)
         draw_text('Estrela - PowerUps', font, (0, 255, 0), screen, 40, 140)
-        draw_text('Fantasma - Inimigo! Corra!', font, (0, 255, 0), screen, 40, 200)
+        draw_text('Médico - Inimigo! Corra!', font, (0, 255, 0), screen, 40, 200)
         draw_text('Esc - voltar', font, (0, 255, 0), screen, 40, 300)
         for event in pygame.event.get():
             if event.type == QUIT:

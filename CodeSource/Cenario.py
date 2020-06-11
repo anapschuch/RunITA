@@ -17,7 +17,7 @@ class Cenario(Screen):
         Cenario.move_image = pygame.image.load('img/movemap.png')
 
         # A ideia é carregar os arquivos de imagem para cada fase
-        self.cenario_image = pygame.image.load('img/movemap.png')
+        self.cenario_image = pygame.image.load('img/cenario.png')
 
         Cenario.size_x, Cenario.size_y = self.move_image.convert().get_rect().size
 

@@ -1,6 +1,6 @@
 from CodeSource.Personagem import *
 from random import randint
-
+import time
 BLACK = (0, 0, 0, 255)
 
 
@@ -39,6 +39,7 @@ class InimigoAleatorio(Personagem):
 
     def check_collision(self, player):
         if self.get_rect().colliderect(player.get_rect()):
-            if pygame.time.get_ticks() > self.last_collision + 2000:
+            if pygame.time.get_ticks() > self.last_collision + 1500:
+                time.sleep(0.4)
                 player.decrease_lives()
                 self.last_collision = pygame.time.get_ticks()
