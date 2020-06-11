@@ -1,7 +1,8 @@
-from CodeSource.Player import*
-from CodeSource.Bullets import*
-from CodeSource.InimigoAleatorio import*
-from CodeSource.EndPhase import*
+from CodeSource.Player import *
+from CodeSource.Bullets import *
+from CodeSource.InimigoAleatorio import *
+from CodeSource.EndPhase import *
+from CodeSource.InimigoEsperto import *
 import pygame
 import os
 import sys
@@ -31,7 +32,7 @@ click = False
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image = pygame.image.load(image_file)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
@@ -43,7 +44,6 @@ def main_menu():
     pygame.mixer.music.load('trilha_sonora.wav')
     pygame.mixer.music.play(-1)
     while True:
-
 
         screen.fill([255, 255, 255])
         screen.blit(BackGround.image, BackGround.rect)
@@ -93,15 +93,15 @@ def game():
     endPhase = EndPhase(585, 490, end_img)
     player = Player(player_img)
 
-    enemy_list = []
-    enemy_list.append(InimigoAleatorio(enemy_img, 95, 140))
-    enemy_list.append(InimigoAleatorio(enemy_img, 332, 196))
-    enemy_list.append(InimigoAleatorio(enemy_img, 500, 190))
-    enemy_list.append(InimigoAleatorio(enemy_img, 770, 350))
-    enemy_list.append(InimigoAleatorio(enemy_img, 1000, 160))
-    enemy_list.append(InimigoAleatorio(enemy_img, 1000, 520))
-    enemy_list.append(InimigoAleatorio(enemy_img, 100, 845))
-    enemy_list.append(InimigoAleatorio(enemy_img, 515, 655))
+    enemy = InimigoEsperto(enemy_img, 95, 140)
+    enemy_rand_list = []
+    enemy_rand_list.append(InimigoAleatorio(enemy_img, 332, 196))
+    enemy_rand_list.append(InimigoAleatorio(enemy_img, 500, 190))
+    enemy_rand_list.append(InimigoAleatorio(enemy_img, 770, 350))
+    enemy_rand_list.append(InimigoAleatorio(enemy_img, 1000, 160))
+    enemy_rand_list.append(InimigoAleatorio(enemy_img, 1000, 520))
+    enemy_rand_list.append(InimigoAleatorio(enemy_img, 100, 845))
+    enemy_rand_list.append(InimigoAleatorio(enemy_img, 515, 655))
 
     # Title and Icon
     pygame.display.set_caption("RunITA")
@@ -126,8 +126,10 @@ def game():
 
         player.update_positions()
 
-        for i in range(0, len(enemy_list)):
-            enemy_list[i].define_next_position()
+        for i in range(0, len(enemy_rand_list)):
+            enemy_rand_list[i].define_next_position()
+
+        enemy.define_next_position(player)
 
         cenario.print_cenario()
 
@@ -141,13 +143,16 @@ def game():
 
         bullets.draw_bullets()
 
-        for i in range(0, len(enemy_list)):
-            enemy_list[i].check_collision(player)
+        for i in range(0, len(enemy_rand_list)):
+            if enemy_rand_list[i].check_collision(player):
+                break
+        enemy.check_collision(player)
 
         player.print()
 
-        for i in range(0, len(enemy_list)):
-            enemy_list[i].print()
+        for i in range(0, len(enemy_rand_list)):
+            enemy_rand_list[i].print()
+        enemy.print()
 
         endPhase.print()
 
@@ -224,7 +229,7 @@ def gameover():
 
 main_menu()
 
-#Inicializando o pygame
+# Inicializando o pygame
 pygame.init()
 CLOCK = pygame.time.Clock()
 
@@ -233,17 +238,17 @@ bullets = Bullets(1)
 player_img = 'img/coronavirus.png'
 player = Player(player_img)
 
-#Title and Icon
+# Title and Icon
 pygame.display.set_caption("RunITA")
 icon = pygame.image.load('img/coronavirus.png')
 pygame.display.set_icon(icon)
 
-#Some game parameters
+# Some game parameters
 FPS = 200
 
 collision_time = -10
 
-#Game loop
+# Game loop
 running = True
 while running:
 
@@ -259,14 +264,14 @@ while running:
     cenario.print_cenario()
 
     if bullets.check_collision(player.get_rect()):
-        collision_time = pygame.time.get_ticks()/1000
+        collision_time = pygame.time.get_ticks() / 1000
         player.increase_velocity()
     else:
-        if pygame.time.get_ticks()/1000 - collision_time > 7:
+        if pygame.time.get_ticks() / 1000 - collision_time > 7:
             player.set_normal_velocity()
 
     bullets.draw_bullets()
 
-    player.print_player()
+    player.print()
     pygame.display.update()
     CLOCK.tick(FPS)
