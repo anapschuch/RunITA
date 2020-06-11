@@ -1,3 +1,5 @@
+from CodeSource.Player import*
+from CodeSource.Bullets import*
 from CodeSource.InimigoAleatorio import*
 from CodeSource.EndPhase import*
 import pygame
