@@ -14,9 +14,9 @@ from pygame.locals import *
 pygame.init()
 pygame.display.set_caption('RunITA!')
 screen = pygame.display.set_mode((640, 360), 0, 32)
+pygame.mixer.init()
 
 font = pygame.font.SysFont('Bauhaus 93', 30)
-
 
 
 def draw_text(text, font, color, surface, x, y):
@@ -39,6 +39,9 @@ class Background(pygame.sprite.Sprite):
 
 def main_menu():
     BackGround = Background('img/coronavirus-4.jpg', [0, 0])
+    pygame.mixer.init()
+    pygame.mixer.music.load('trilha_sonora.wav')
+    pygame.mixer.music.play(-1)
     while True:
 
 
