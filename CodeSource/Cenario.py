@@ -1,5 +1,7 @@
 from CodeSource.Screen import *
 
+BLACK = (0, 0, 0, 255)
+
 
 class Cenario(Screen):
     move_image = None
