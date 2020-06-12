@@ -8,6 +8,7 @@ class Bullets(Cenario):
     def __init__(self, phase, bullets_positions):
         super().__init__(phase)
         self.bullets_positions = bullets_positions
+        self.bullets = []
         self.def_bullets()
 
     def def_bullets(self):
