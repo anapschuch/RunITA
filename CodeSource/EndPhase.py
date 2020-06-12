@@ -8,7 +8,14 @@ class EndPhase(Screen):
         self.y = y
         self.img = pygame.image.load(img)
         self.img = pygame.transform.scale(self.img, (60, 60))
+        self.rect = self.img.get_rect()
+        self.rect = self.rect.move(x, y)
 
     def print(self):
         if self.x + Cenario.pos_x < self.screen_x and self.y + Cenario.pos_y < self.screen_y:
             self.screen.blit(self.img, (self.x + Cenario.pos_x, self.y + Cenario.pos_y))
+
+    def check_collision(self, player):
+        if self.rect.colliderect(player.get_rect()):
+            return True
+        return False

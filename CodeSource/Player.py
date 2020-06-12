@@ -4,10 +4,11 @@ BLACK = (0, 0, 0, 255)
 
 
 class Player(Personagem):
-    def __init__(self, img_path):
-        super().__init__(img_path, 33, 80)
+    def __init__(self, img_path, x_init, y_init, lives):
+        super().__init__(img_path, x_init, y_init)
         self.x = self.abs_x
         self.y = self.abs_y
+        self.lives = lives
 
     def update_positions(self):
         if self.check_next_move():

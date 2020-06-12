@@ -2,13 +2,13 @@ from CodeSource.OneBullet import *
 
 
 class Bullets(Cenario):
-    bullets_positions = [(310, 380), (30, 845), (890, 585), (680, 265), (325, 205), (660, 815), (945, 30)]
+    bullets_positions = []
     bullets = []
 
-    def __init__(self, phase):
+    def __init__(self, phase, bullets_positions):
         super().__init__(phase)
+        self.bullets_positions = bullets_positions
         self.def_bullets()
-
 
     def def_bullets(self):
         for i in range(len(self.bullets_positions)):

@@ -3,14 +3,13 @@ from CodeSource.Bullets import *
 from CodeSource.InimigoAleatorio import *
 from CodeSource.EndPhase import *
 from CodeSource.InimigoEsperto import *
+from pygame.locals import *
 import pygame
-import os
+import ast
 import sys
 
 pygame.init()
 mainClock = pygame.time.Clock()
-
-from pygame.locals import *
 
 pygame.init()
 pygame.display.set_caption('RunITA!')
@@ -82,102 +81,128 @@ def main_menu():
 
 
 def game():
+    lives = 3
     CLOCK = pygame.time.Clock()
 
-    screen = Screen()
-    cenario = Cenario(1)
-    bullets = Bullets(1)
+    arquivo = open('dados.txt', 'r')
+    dados = arquivo.read()
+    dados = ast.literal_eval(dados)
+
     player_img = 'img/coronavirus.png'
     enemy_img = 'img/enemy2.png'
     end_img = 'img/endphase.png'
-    endPhase = EndPhase(585, 490, end_img)
-    player = Player(player_img)
 
-    enemy = InimigoEsperto(enemy_img, 95, 140)
-    enemy_rand_list = []
-    enemy_rand_list.append(InimigoAleatorio(enemy_img, 332, 196))
-    enemy_rand_list.append(InimigoAleatorio(enemy_img, 500, 190))
-    enemy_rand_list.append(InimigoAleatorio(enemy_img, 770, 350))
-    enemy_rand_list.append(InimigoAleatorio(enemy_img, 1000, 160))
-    enemy_rand_list.append(InimigoAleatorio(enemy_img, 1000, 520))
-    enemy_rand_list.append(InimigoAleatorio(enemy_img, 100, 845))
-    enemy_rand_list.append(InimigoAleatorio(enemy_img, 515, 655))
+    num_phases = len(dados)
+    phase = 0
 
-    # Title and Icon
-    pygame.display.set_caption("RunITA")
-    icon = pygame.image.load('img/coronavirus.png')
-    pygame.display.set_icon(icon)
+    while phase < num_phases:
+        running = True
+        dados_phase = dados[phase]
 
-    # Some game parameters
-    FPS = 200
+        screen = Screen()
+        cenario = Cenario(phase)
+        bullets = Bullets(phase, dados_phase['bullets'])
+        endPhase = EndPhase(dados_phase['end_phase'][0], dados_phase['end_phase'][1], end_img)
 
-    collision_time = -10
+        player = Player(player_img, dados_phase['player'][0], dados_phase['player'][1], lives)
 
-    running = True
-    while running:
+        smart_enemy_list = []
+        for i in range(len(dados_phase['inimigo_esperto'])):
+            pos = dados_phase['inimigo_esperto'][i]
+            smart_enemy_list.append(InimigoEsperto(enemy_img, pos[0], pos[1]))
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        enemy_rand_list = []
+        for i in range(len(dados_phase['inimigo_aleatorio'])):
+            pos = dados_phase['inimigo_aleatorio'][i]
+            enemy_rand_list.append(InimigoAleatorio(enemy_img, pos[0], pos[1]))
+
+        # Title and Icon
+        pygame.display.set_caption("RunITA")
+        icon = pygame.image.load('img/coronavirus.png')
+        pygame.display.set_icon(icon)
+
+        # Some game parameters
+        FPS = 200
+
+        collision_time = -10
+
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.KEYUP or event.type == pygame.KEYDOWN:
+                    pressed_key = pygame.key.name(event.key)
+                    player.update_pressed_key(pressed_key, event.type)
+
+            player.update_positions()
+
+            for i in range(len(enemy_rand_list)):
+                enemy_rand_list[i].define_next_position()
+
+            for i in range(len(smart_enemy_list)):
+                smart_enemy_list[i].define_next_position(player)
+
+            cenario.print_cenario()
+
+            if bullets.check_collision(player.get_rect()):
+                collision_time = pygame.time.get_ticks() / 1000
+                player.increase_velocity()
+                player.increase_points()
+            else:
+                if pygame.time.get_ticks() / 1000 - collision_time > 7:
+                    player.set_normal_velocity()
+
+            bullets.draw_bullets()
+
+            for i in range(len(enemy_rand_list)):
+                if enemy_rand_list[i].check_collision(player):
+                    break
+
+            for i in range(len(smart_enemy_list)):
+                if smart_enemy_list[i].check_collision(player):
+                    break
+
+            player.print()
+
+            for i in range(0, len(enemy_rand_list)):
+                enemy_rand_list[i].print()
+
+            for i in range(0, len(smart_enemy_list)):
+                smart_enemy_list[i].print()
+
+            endPhase.print()
+
+            ### Lugar das informações do jogo
+            pygame.draw.rect(screen.screen, BLACK, [0, 0, screen.screen_x, 25], 0)
+            pygame.font.init()  # you have to call this at the start,
+            fonte = pygame.font.SysFont('comicsansms', 20)
+            texto = fonte.render('vidas -', False, (255, 255, 255))
+            texto2 = fonte.render('pontuação -', False, (255, 255, 255))
+            motivacional = fonte.render('Você é bom!', False, (255, 255, 255))
+            vidas = fonte.render(str(player.get_lives()), False, (255, 255, 255))
+            pontos = fonte.render(str(player.get_points()), False, (255, 255, 255))
+            screen.screen.blit(vidas, (120, 0))
+            screen.screen.blit(texto2, (150, 0))
+            screen.screen.blit(texto, (50, 0))
+            screen.screen.blit(pontos, (265, 0))
+            if player.get_points() >= 5:
+                screen.screen.blit(motivacional, (305, 0))
+
+            pygame.display.update()
+            CLOCK.tick(FPS)
+
+            if endPhase.check_collision(player):
+                lives = player.get_lives()
                 running = False
+            if player.get_lives() == -1:
+                running = False
+                gameover()
 
-            if event.type == pygame.KEYUP or event.type == pygame.KEYDOWN:
-                pressed_key = pygame.key.name(event.key)
-                player.update_pressed_key(pressed_key, event.type)
+        phase += 1
 
-        player.update_positions()
-
-        for i in range(0, len(enemy_rand_list)):
-            enemy_rand_list[i].define_next_position()
-
-        enemy.define_next_position(player)
-
-        cenario.print_cenario()
-
-        if bullets.check_collision(player.get_rect()):
-            collision_time = pygame.time.get_ticks() / 1000
-            player.increase_velocity()
-            player.increase_points()
-        else:
-            if pygame.time.get_ticks() / 1000 - collision_time > 7:
-                player.set_normal_velocity()
-
-        bullets.draw_bullets()
-
-        for i in range(0, len(enemy_rand_list)):
-            if enemy_rand_list[i].check_collision(player):
-                break
-        enemy.check_collision(player)
-
-        player.print()
-
-        for i in range(0, len(enemy_rand_list)):
-            enemy_rand_list[i].print()
-        enemy.print()
-
-        endPhase.print()
-
-        ### Lugar das informações do jogo
-        pygame.draw.rect(screen.screen, BLACK, [0, 0, screen.screen_x, 25], 0)
-        pygame.font.init()  # you have to call this at the start,
-        fonte = pygame.font.SysFont('comicsansms', 20)
-        texto = fonte.render('vidas -', False, (255, 255, 255))
-        texto2 = fonte.render('pontuação -', False, (255, 255, 255))
-        motivacional = fonte.render('Você é bom!', False, (255, 255, 255))
-        vidas = fonte.render(str(player.get_lives()), False, (255, 255, 255))
-        pontos = fonte.render(str(player.get_points()), False, (255, 255, 255))
-        screen.screen.blit(vidas, (120, 0))
-        screen.screen.blit(texto2, (150, 0))
-        screen.screen.blit(texto, (50, 0))
-        screen.screen.blit(pontos, (265, 0))
-        if player.get_points() >= 5:
-            screen.screen.blit(motivacional, (305, 0))
-
-        pygame.display.update()
-        CLOCK.tick(FPS)
-
-        if player.get_lives() == -1:
-            running = False
-            gameover()
+    win()
 
 
 def options():
@@ -226,52 +251,26 @@ def gameover():
         mainClock.tick(60)
     game()
 
+def win():
+    running = True
+    while running:
+        screen.fill([0, 0, 0])
+        draw_text('Você Venceu!', font, (0, 255, 0), screen, 20, 20)
+        draw_text('Clique em R para recomeçar', font, (0, 255, 0), screen, 40, 80)
+        draw_text('Clique em esc para sair :)', font, (0, 255, 0), screen, 40, 140)
+
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit(0)
+            if event.type == KEYDOWN:
+                if event.key == K_r:
+                    running = False
+
+        pygame.display.update()
+        mainClock.tick(60)
+    game()
+
 
 main_menu()
-
-# Inicializando o pygame
-pygame.init()
-CLOCK = pygame.time.Clock()
-
-cenario = Cenario(1)
-bullets = Bullets(1)
-player_img = 'img/coronavirus.png'
-player = Player(player_img)
-
-# Title and Icon
-pygame.display.set_caption("RunITA")
-icon = pygame.image.load('img/coronavirus.png')
-pygame.display.set_icon(icon)
-
-# Some game parameters
-FPS = 200
-
-collision_time = -10
-
-# Game loop
-running = True
-while running:
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-        if event.type == pygame.KEYUP or event.type == pygame.KEYDOWN:
-            pressed_key = pygame.key.name(event.key)
-            player.update_pressed_key(pressed_key, event.type)
-
-    player.update_positions()
-    cenario.print_cenario()
-
-    if bullets.check_collision(player.get_rect()):
-        collision_time = pygame.time.get_ticks() / 1000
-        player.increase_velocity()
-    else:
-        if pygame.time.get_ticks() / 1000 - collision_time > 7:
-            player.set_normal_velocity()
-
-    bullets.draw_bullets()
-
-    player.print()
-    pygame.display.update()
-    CLOCK.tick(FPS)

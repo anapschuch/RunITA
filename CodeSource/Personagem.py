@@ -16,7 +16,6 @@ class Personagem(Screen):
         self.img = pygame.transform.scale(self.img, (20, 20))
         self.size_x, self.size_y = self.img.convert().get_rect().size
         self.move = 1
-        self.lives = 3
         self.points = 0
 
     def check_next_move(self):
