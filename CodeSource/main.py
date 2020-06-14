@@ -81,6 +81,7 @@ def game():
     end_img = 'img/endphase.png'
     heart_img = 'img/heart.png'
     bullet_img = 'img/bullets2.png'
+    bullets_points_img = 'img/bullets_points.png'
 
     lives_img = pygame.image.load(heart_img)
     lives_img = pygame.transform.scale(lives_img, (15, 15))
@@ -95,6 +96,7 @@ def game():
         screen = Screen()
         cenario = Cenario(phase)
         bullets = Bullets(dados_phase['bullets'], bullet_img)
+        bullets_points = Bullets(dados_phase['bullets2'], bullets_points_img)
         endPhase = OneBullet(dados_phase['end_phase'][0], dados_phase['end_phase'][1], end_img, 60)
 
         player = Player(player_img, dados_phase['player'][0], dados_phase['player'][1], lives, points)
@@ -139,6 +141,9 @@ def game():
 
             cenario.print_cenario()
 
+            if bullets_points.check_collision(player.get_rect()):
+                player.increase_points()
+
             if bullets.check_collision(player.get_rect()):
                 collision_time = pygame.time.get_ticks() / 1000
                 player.increase_velocity()
@@ -148,6 +153,7 @@ def game():
                     player.set_normal_velocity()
 
             bullets.draw_bullets()
+            bullets_points.draw_bullets()
 
             for i in range(len(enemy_rand_list)):
                 if enemy_rand_list[i].check_collision(player):
