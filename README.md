@@ -9,7 +9,7 @@ Equipe: Ana Paula Lopes Schuch, Lucas Gameiro Borges e Vinícius de Pádua Dias 
 #### Objetivos do Jogo:
 Passar de fase, capturando o maior número de elementos do cenário, sem ser atingido por inimigos.
 
-####Instruções:
+#### Instruções:
 O jogador deverá utilizar as teclas cima, baixo, direita e esquerda para se mover. 
 Para passar de fase, o jogador deverá encontrar o portal, designado pela imagem:
  
