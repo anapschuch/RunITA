@@ -4,8 +4,8 @@ BLACK = (0, 0, 0, 255)
 
 
 class Cenario(Screen):
+    """ Classe que define posições e imprime a imagem de fundo de cada fase """
     move_image = None
-    phase = 0
     pos_x = 0
     pos_y = 0
     size_x = 0
@@ -13,10 +13,9 @@ class Cenario(Screen):
 
     def __init__(self, phase):
         super().__init__()
-        Cenario.phase = phase
-        Cenario.move_image = pygame.image.load(str('img/movemap' + str(phase) + '.png'))
 
         # A ideia é carregar os arquivos de imagem para cada fase
+        Cenario.move_image = pygame.image.load(str('img/movemap' + str(phase) + '.png'))
         self.cenario_image = pygame.image.load(str('img/cenario' + str(phase) + '.png'))
 
         Cenario.size_x, Cenario.size_y = self.move_image.convert().get_rect().size

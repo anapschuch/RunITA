@@ -3,9 +3,8 @@ from CodeSource.Cenario import *
 BLACK = (0, 0, 0, 255)
 
 
-# Classe para implementar inimigo e player
-# Basicamente define as próximas posições de cada um
-class Personagem(Screen):
+class Character(Screen):
+    """ Classe que define atributos e métodos utilizados pelas classes de Inimigo e Player """
     def __init__(self, img_path, x_init, y_init):
         super().__init__()
         self.abs_x = x_init
@@ -16,7 +15,6 @@ class Personagem(Screen):
         self.img = pygame.transform.scale(self.img, (20, 20))
         self.size_x, self.size_y = self.img.convert().get_rect().size
         self.move = 1
-        self.points = 0
 
     def check_next_move(self):
         if Cenario.get_color(self.abs_x + self.x_change, self.abs_y + self.y_change) == BLACK:
@@ -43,15 +41,3 @@ class Personagem(Screen):
 
     def set_normal_velocity(self):
         self.move = 1
-
-    def decrease_lives(self):
-        self.lives -= 1
-
-    def increase_points(self):
-        self.points += 1
-
-    def get_lives(self):
-        return self.lives
-
-    def get_points(self):
-        return self.points

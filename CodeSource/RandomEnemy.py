@@ -1,8 +1,10 @@
-from CodeSource.Inimigo import*
+from CodeSource.Enemy import*
 from random import randint
 
 
-class InimigoAleatorio(Inimigo):
+class RandomEnemy(Enemy):
+    """ Inimigo que anda numa mesma direção até não ser mais possível se mover.
+    A partir daí, uma nova direção é escolhida aleatoriamente."""
     def __init__(self, img_path, x_init, y_init):
         super().__init__(img_path, x_init, y_init)
         self.direction = randint(0, 3)

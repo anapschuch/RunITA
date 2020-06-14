@@ -1,7 +1,8 @@
-from CodeSource.Inimigo import *
+from CodeSource.Enemy import *
 
 
-class InimigoEsperto(Inimigo):
+class SmartEnemy(Enemy):
+    """ Inimigo que persegue o jogador"""
     def __init__(self, img_path, x_init, y_init):
         super().__init__(img_path, x_init, y_init)
         self.has_moved = False

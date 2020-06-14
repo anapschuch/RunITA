@@ -1,14 +1,16 @@
-from CodeSource.Personagem import *
+from CodeSource.Character import *
 
 BLACK = (0, 0, 0, 255)
 
 
-class Player(Personagem):
-    def __init__(self, img_path, x_init, y_init, lives):
+class Player(Character):
+    """Classe para o jogador"""
+    def __init__(self, img_path, x_init, y_init, lives, points):
         super().__init__(img_path, x_init, y_init)
         self.x = self.abs_x
         self.y = self.abs_y
         self.lives = lives
+        self.points = points
 
     def update_positions(self):
         if self.check_next_move():
@@ -64,3 +66,15 @@ class Player(Personagem):
 
     def print(self):
         self.screen.blit(self.img, (self.x, self.y))
+
+    def decrease_lives(self):
+        self.lives -= 1
+
+    def increase_points(self):
+        self.points += 100
+
+    def get_lives(self):
+        return self.lives
+
+    def get_points(self):
+        return self.points

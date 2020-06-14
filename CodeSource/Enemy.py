@@ -1,7 +1,8 @@
-from CodeSource.Personagem import *
+from CodeSource.Character import *
 
 
-class Inimigo(Personagem):
+class Enemy(Character):
+    """Classe para definir atributos e métodos para os inimigos"""
     def __init__(self, img_path, x_init, y_init):
         super().__init__(img_path, x_init, y_init)
         self.move = 0.5

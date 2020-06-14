@@ -1,22 +1,11 @@
 from CodeSource.Player import *
 from CodeSource.Bullets import *
-from CodeSource.InimigoAleatorio import *
-from CodeSource.EndPhase import *
-from CodeSource.InimigoEsperto import *
+from CodeSource.RandomEnemy import *
+from CodeSource.SmartEnemy import *
 from pygame.locals import *
 import pygame
 import ast
 import sys
-
-pygame.init()
-mainClock = pygame.time.Clock()
-
-pygame.init()
-pygame.display.set_caption('RunITA!')
-screen = pygame.display.set_mode((640, 360), 0, 32)
-pygame.mixer.init()
-
-font = pygame.font.SysFont('Bauhaus 93', 30)
 
 
 def draw_text(text, font, color, surface, x, y):
@@ -24,9 +13,6 @@ def draw_text(text, font, color, surface, x, y):
     textrect = textobj.get_rect()
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
-
-
-click = False
 
 
 class Background(pygame.sprite.Sprite):
@@ -38,6 +24,7 @@ class Background(pygame.sprite.Sprite):
 
 
 def main_menu():
+    click = False
     BackGround = Background('img/coronavirus-4.jpg', [0, 0])
     pygame.mixer.init()
     pygame.mixer.music.load('trilha_sonora.wav')
@@ -81,7 +68,8 @@ def main_menu():
 
 
 def game():
-    lives = 3
+    lives = 4
+    points = 0
     CLOCK = pygame.time.Clock()
 
     arquivo = open('dados.txt', 'r')
@@ -91,6 +79,11 @@ def game():
     player_img = 'img/coronavirus.png'
     enemy_img = 'img/enemy2.png'
     end_img = 'img/endphase.png'
+    heart_img = 'img/heart.png'
+    bullet_img = 'img/bullets2.png'
+
+    lives_img = pygame.image.load(heart_img)
+    lives_img = pygame.transform.scale(lives_img, (15, 15))
 
     num_phases = len(dados)
     phase = 0
@@ -101,20 +94,20 @@ def game():
 
         screen = Screen()
         cenario = Cenario(phase)
-        bullets = Bullets(phase, dados_phase['bullets'])
-        endPhase = EndPhase(dados_phase['end_phase'][0], dados_phase['end_phase'][1], end_img)
+        bullets = Bullets(dados_phase['bullets'], bullet_img)
+        endPhase = OneBullet(dados_phase['end_phase'][0], dados_phase['end_phase'][1], end_img, 60)
 
-        player = Player(player_img, dados_phase['player'][0], dados_phase['player'][1], lives)
+        player = Player(player_img, dados_phase['player'][0], dados_phase['player'][1], lives, points)
 
         smart_enemy_list = []
         for i in range(len(dados_phase['inimigo_esperto'])):
             pos = dados_phase['inimigo_esperto'][i]
-            smart_enemy_list.append(InimigoEsperto(enemy_img, pos[0], pos[1]))
+            smart_enemy_list.append(SmartEnemy(enemy_img, pos[0], pos[1]))
 
         enemy_rand_list = []
         for i in range(len(dados_phase['inimigo_aleatorio'])):
             pos = dados_phase['inimigo_aleatorio'][i]
-            enemy_rand_list.append(InimigoAleatorio(enemy_img, pos[0], pos[1]))
+            enemy_rand_list.append(RandomEnemy(enemy_img, pos[0], pos[1]))
 
         # Title and Icon
         pygame.display.set_caption("RunITA")
@@ -181,20 +174,24 @@ def game():
             texto = fonte.render('vidas -', False, (255, 255, 255))
             texto2 = fonte.render('pontuação -', False, (255, 255, 255))
             motivacional = fonte.render('Você é bom!', False, (255, 255, 255))
-            vidas = fonte.render(str(player.get_lives()), False, (255, 255, 255))
             pontos = fonte.render(str(player.get_points()), False, (255, 255, 255))
-            screen.screen.blit(vidas, (120, 0))
-            screen.screen.blit(texto2, (150, 0))
+
+            vidas = player.get_lives()
+            for i in range(vidas):
+                screen.screen.blit(lives_img, (110+15*i, 0))
+
+            screen.screen.blit(texto2, (190, 0))
             screen.screen.blit(texto, (50, 0))
-            screen.screen.blit(pontos, (265, 0))
-            if player.get_points() >= 5:
-                screen.screen.blit(motivacional, (305, 0))
+            screen.screen.blit(pontos, (300, 0))
+            if player.get_points() >= 500:
+                screen.screen.blit(motivacional, (380, 0))
 
             pygame.display.update()
             CLOCK.tick(FPS)
 
-            if endPhase.check_collision(player):
+            if endPhase.check_collision(player.get_rect()):
                 lives = player.get_lives()
+                points = player.get_points()
                 running = False
             if player.get_lives() == -1:
                 running = False
@@ -239,17 +236,20 @@ def gameover():
         draw_text('Clique em esc para desistir :(', font, (0, 255, 0), screen, 40, 140)
 
         for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit(0)
-            if event.type == KEYDOWN:
                 if event.key == K_r:
                     running = False
 
         pygame.display.update()
         mainClock.tick(60)
     game()
+
 
 def win():
     running = True
@@ -260,11 +260,13 @@ def win():
         draw_text('Clique em esc para sair :)', font, (0, 255, 0), screen, 40, 140)
 
         for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit(0)
-            if event.type == KEYDOWN:
                 if event.key == K_r:
                     running = False
 
@@ -273,4 +275,13 @@ def win():
     game()
 
 
+pygame.init()
+mainClock = pygame.time.Clock()
+
+pygame.init()
+pygame.display.set_caption('RunITA!')
+screen = pygame.display.set_mode((640, 360), 0, 32)
+pygame.mixer.init()
+
+font = pygame.font.SysFont('Bauhaus 93', 30)
 main_menu()
