@@ -19,7 +19,7 @@ Para passar de fase, o jogador deverá encontrar o portal, designado pela imagem
 Além disso, há dois tipos de inimigos: os que andam aleatoriamente e os que perseguem o personagem.
 Não é possível saber qual dos dois tipos o inimigo é, então tome cuidado!
 
-O personagem poderá capturar as estrelas do cenário, e assim aumentar sua velocidade por um determinado período.
+O personagem poderá capturar as estrelas do cenário, e assim aumentar sua velocidade por um determinado período. Os flocos de neve aumentam a pontuação do jogador.
 
 Ao ser capturado mais do que quatro vezes, o jogo é encerrado e há a opção para recomeçar.
 

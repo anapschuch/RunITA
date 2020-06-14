@@ -216,10 +216,11 @@ def options():
         screen.fill([255, 255, 255])
         screen.blit(BackGround.image, BackGround.rect)
         draw_text('Controles e elementos do jogo:', font, (0, 255, 0), screen, 20, 20)
-        draw_text('Setas do teclado - movimentação', font, (0, 255, 0), screen, 40, 80)
-        draw_text('Estrela - PowerUps', font, (0, 255, 0), screen, 40, 140)
-        draw_text('Médico - Inimigo! Corra!', font, (0, 255, 0), screen, 40, 200)
-        draw_text('Esc - voltar', font, (0, 255, 0), screen, 40, 300)
+        draw_text('Setas do teclado - Movimentação', font, (0, 255, 0), screen, 40, 80)
+        draw_text('Estrela - Aumento da velocidade do player', font, (0, 255, 0), screen, 40, 140)
+        draw_text('Floco de neve - Aumento da pontuação', font, (0, 255, 0), screen, 40, 200)
+        draw_text('Médico - Inimigo! Corra!', font, (0, 255, 0), screen, 40, 260)
+        draw_text('Esc - Voltar', font, (0, 255, 0), screen, 40, 320)
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
